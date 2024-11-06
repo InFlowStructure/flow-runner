@@ -1,6 +1,5 @@
 #include <cxxopts.hpp>
 #include <flow/core/Env.hpp>
-#include <flow/core/Log.hpp>
 #include <flow/core/Node.hpp>
 #include <flow/core/NodeFactory.hpp>
 
@@ -16,7 +15,7 @@
 
 struct PreviewNode : public flow::Node
 {
-    explicit PreviewNode(const flow::UUID &uuid, const std::string &name, std::shared_ptr<flow::Env> env)
+    explicit PreviewNode(const flow::UUID& uuid, const std::string& name, std::shared_ptr<flow::Env> env)
         : flow::Node(uuid, flow::TypeName_v<PreviewNode>, name, std::move(env))
     {
         AddInput<std::any>("in", "");
@@ -27,7 +26,7 @@ struct PreviewNode : public flow::Node
     void Compute() override
     {
         std::string result = "";
-        if (const auto &in = GetInputData("in"))
+        if (const auto& in = GetInputData("in"))
         {
             SPDLOG_INFO("Result: {0}", in->ToString());
         }
@@ -44,7 +43,7 @@ void handle_signal(int)
 }
 } // namespace
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     cxxopts::Options options("Flow");
     options.add_options()("f,flow", "Flow file to open", cxxopts::value<std::string>())(
@@ -57,7 +56,7 @@ int main(int argc, char **argv)
     {
         result = options.parse(argc, argv);
     }
-    catch (const cxxopts::exceptions::exception &e)
+    catch (const cxxopts::exceptions::exception& e)
     {
         std::cerr << "Caught exception while parsing arguments: " << e.what() << std::endl;
         return EXIT_FAILURE;
@@ -92,7 +91,7 @@ int main(int argc, char **argv)
         i >> flow_json;
         i.close();
     }
-    catch (const std::ios_base::failure &fail)
+    catch (const std::ios_base::failure& fail)
     {
         SPDLOG_CRITICAL("Failed to load file '{0}': {1}", filename, fail.what());
         return EXIT_FAILURE;
@@ -109,11 +108,11 @@ int main(int argc, char **argv)
     SPDLOG_INFO("Loaded modules");
 
     flow::Graph graph("main", env);
-    graph.OnError.Bind("Log", [](const std::exception &e) { SPDLOG_ERROR("Caught graph exception: {0}", e.what()); });
+    graph.OnError.Bind("Log", [](const std::exception& e) { SPDLOG_ERROR("Caught graph exception: {0}", e.what()); });
     flow_json.get_to(graph);
 
     SPDLOG_TRACE("Starting nodes...");
-    graph.Visit([](const auto &node) { node->Start(); });
+    graph.Visit([](const auto& node) { node->Start(); });
     SPDLOG_INFO("Started nodes");
 
     SPDLOG_INFO("Running flow...");
@@ -135,7 +134,7 @@ int main(int argc, char **argv)
     SPDLOG_INFO("Done");
 
     SPDLOG_TRACE("Stopping nodes...");
-    graph.Visit([](const auto &node) { node->Stop(); });
+    graph.Visit([](const auto& node) { node->Stop(); });
     SPDLOG_INFO("Stopped nodes");
 
     SPDLOG_INFO("Flow complete, exiting...");
