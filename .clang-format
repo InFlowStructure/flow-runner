@@ -1,0 +1,10 @@
+---
+Language: Cpp
+BasedOnStyle: Microsoft
+AlignConsecutiveAssignments: Consecutive
+AllowShortBlocksOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortFunctionsOnASingleLine: true
+AlwaysBreakTemplateDeclarations: Yes
+PointerAlignment: Left
+SpaceAfterTemplateKeyword: false
